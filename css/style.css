@@ -1,0 +1,964 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    width: 100%;
+    min-height: 100%;
+}
+
+body {
+    width: 100%;
+    min-height: 100vh;
+
+    font-family: Arial, Helvetica, sans-serif;
+
+    color: #6d3c50;
+
+    background:
+        radial-gradient(
+            circle at top left,
+            #ffd6e7,
+            transparent 35%
+        ),
+        radial-gradient(
+            circle at bottom right,
+            #ffc1d9,
+            transparent 35%
+        ),
+        linear-gradient(
+            135deg,
+            #fff0f5,
+            #ffe4ec
+        );
+
+    overflow-x: hidden;
+}
+
+
+/* ========================================
+   FIXED PAGES
+======================================== */
+
+.question-page {
+    overflow: hidden;
+}
+
+
+/* ========================================
+   FLOATING HEARTS
+======================================== */
+
+.hearts {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.hearts span {
+    position: absolute;
+    bottom: -50px;
+
+    font-size: 22px;
+    opacity: 0.45;
+
+    animation: floatHeart 8s linear infinite;
+}
+
+.hearts span:nth-child(1) {
+    left: 10%;
+    animation-delay: 0s;
+}
+
+.hearts span:nth-child(2) {
+    left: 25%;
+    animation-delay: 2s;
+}
+
+.hearts span:nth-child(3) {
+    left: 45%;
+    animation-delay: 4s;
+}
+
+.hearts span:nth-child(4) {
+    left: 65%;
+    animation-delay: 1s;
+}
+
+.hearts span:nth-child(5) {
+    left: 80%;
+    animation-delay: 3s;
+}
+
+.hearts span:nth-child(6) {
+    left: 90%;
+    animation-delay: 5s;
+}
+
+.hearts span:nth-child(7) {
+    left: 35%;
+    animation-delay: 1.5s;
+}
+
+.hearts span:nth-child(8) {
+    left: 55%;
+    animation-delay: 3.5s;
+}
+
+
+/* ========================================
+   QUESTION / YES / CONFIRMATION PAGES
+======================================== */
+
+.question-container {
+    width: 100%;
+    min-height: 100vh;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 15px;
+
+    position: relative;
+    z-index: 2;
+}
+
+
+/* ========================================
+   MAIN CARD
+======================================== */
+
+.love-card {
+    width: min(430px, 100%);
+
+    padding: 32px 25px;
+
+    text-align: center;
+
+    background: rgba(255, 255, 255, 0.92);
+
+    border: 1px solid rgba(255, 255, 255, 0.9);
+
+    border-radius: 25px;
+
+    box-shadow:
+        0 20px 45px
+        rgba(180, 70, 110, 0.14);
+
+    backdrop-filter: blur(12px);
+
+    animation: cardAppear 0.7s ease;
+}
+
+
+/* ========================================
+   QUESTION PAGE CONTENT
+======================================== */
+
+.emoji {
+    font-size: 50px;
+    margin-bottom: 10px;
+
+    animation: heartbeat 1.5s infinite;
+}
+
+.small-text {
+    color: #a64d6f;
+
+    font-size: 13px;
+
+    margin-bottom: 8px;
+}
+
+h1 {
+    color: #8f3157;
+
+    font-size: clamp(32px, 7vw, 46px);
+
+    line-height: 1.05;
+
+    margin-bottom: 14px;
+
+    font-weight: 800;
+}
+
+.message {
+    color: #795363;
+
+    font-size: 14px;
+
+    line-height: 1.5;
+
+    max-width: 330px;
+
+    margin: 0 auto 25px;
+}
+
+
+/* ========================================
+   BUTTONS
+======================================== */
+
+.buttons {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 12px;
+
+    min-height: 48px;
+
+    position: relative;
+}
+
+button {
+    border: none;
+
+    font-family: inherit;
+
+    font-size: 14px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    border-radius: 50px;
+
+    padding: 12px 24px;
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+/* YES */
+
+.yes-button {
+    background: #e94f83;
+
+    color: white;
+
+    box-shadow:
+        0 8px 20px
+        rgba(233, 79, 131, 0.28);
+}
+
+.yes-button:hover {
+    transform:
+        translateY(-2px)
+        scale(1.03);
+
+    box-shadow:
+        0 12px 25px
+        rgba(233, 79, 131, 0.35);
+}
+
+
+/* NO */
+
+.no-button {
+    background: white;
+
+    color: #a64d6f;
+
+    border:
+        2px solid
+        #f1b5c9;
+
+    position: relative;
+
+    z-index: 10;
+}
+
+.no-button:hover {
+    background: #fff5f8;
+}
+
+
+/* ========================================
+   YES PAGE
+======================================== */
+
+.big-heart {
+    font-size: 70px;
+
+    margin-bottom: 10px;
+
+    animation: bigHeartbeat 1.2s infinite;
+}
+
+.celebration-card h1 {
+    animation:
+        textAppear 1s ease 0.2s both;
+}
+
+.celebration-card .message {
+    animation:
+        textAppear 1s ease 0.4s both;
+}
+
+.celebration-card button {
+    animation:
+        textAppear 1s ease 0.6s both;
+}
+
+
+/* ========================================
+   DATE PAGE
+======================================== */
+
+.date-page {
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.date-container {
+    width: 100%;
+    min-height: 100vh;
+
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+
+    padding: 25px 15px 45px;
+
+    position: relative;
+    z-index: 2;
+}
+
+.date-card {
+    width: min(780px, 100%);
+
+    padding: 30px;
+
+    background: rgba(255, 255, 255, 0.92);
+
+    border-radius: 25px;
+
+    box-shadow:
+        0 20px 45px
+        rgba(180, 70, 110, 0.14);
+
+    backdrop-filter: blur(12px);
+
+    animation: cardAppear 0.7s ease;
+}
+
+
+/* ========================================
+   DATE HEADER
+======================================== */
+
+.date-header {
+    text-align: center;
+    margin-bottom: 28px;
+}
+
+.date-emoji {
+    font-size: 45px;
+    margin-bottom: 7px;
+
+    animation: heartbeat 1.5s infinite;
+}
+
+.date-header h1 {
+    margin-bottom: 10px;
+}
+
+.date-intro {
+    color: #795363;
+
+    font-size: 14px;
+
+    max-width: 450px;
+
+    margin: auto;
+
+    line-height: 1.5;
+}
+
+
+/* ========================================
+   CHOICE SECTIONS
+======================================== */
+
+.choice-section {
+    margin-bottom: 25px;
+}
+
+.choice-section h2 {
+    color: #8f3157;
+
+    font-size: 18px;
+
+    margin-bottom: 12px;
+}
+
+
+/* ========================================
+   CHOICE GRID
+======================================== */
+
+.choice-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 10px;
+}
+
+
+/* ========================================
+   CHOICE CARD
+======================================== */
+
+.choice-card {
+    width: 100%;
+
+    min-height: 90px;
+
+    padding: 10px 6px;
+
+    background: white;
+
+    border:
+        2px solid
+        #f2d0dc;
+
+    border-radius: 14px;
+
+    color: #79465a;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 5px;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.2s ease,
+        border-color 0.2s ease,
+        background 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.choice-card span {
+    font-size: 25px;
+}
+
+.choice-card strong {
+    font-size: 13px;
+    text-align: center;
+}
+
+.choice-card:hover {
+    transform: translateY(-2px);
+
+    border-color: #e94f83;
+
+    box-shadow:
+        0 6px 15px
+        rgba(233, 79, 131, 0.12);
+}
+
+.choice-card.selected {
+    background: #fff0f5;
+
+    border-color: #e94f83;
+
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 6px 15px
+        rgba(233, 79, 131, 0.16);
+}
+
+
+/* ========================================
+   DATE / TIME INPUTS
+======================================== */
+
+.date-inputs {
+    display: grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap: 12px;
+}
+
+.input-group {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 5px;
+}
+
+.input-group label {
+    color: #795363;
+
+    font-size: 13px;
+
+    font-weight: 700;
+}
+
+.input-group input {
+    width: 100%;
+
+    min-height: 44px;
+
+    padding: 10px 12px;
+
+    border:
+        2px solid
+        #f2d0dc;
+
+    border-radius: 10px;
+
+    background: white;
+
+    color: #6d3c50;
+
+    font-family: inherit;
+
+    font-size: 14px;
+
+    outline: none;
+}
+
+.input-group input:focus {
+    border-color: #e94f83;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(233, 79, 131, 0.1);
+}
+
+
+/* ========================================
+   CONFIRM
+======================================== */
+
+.confirm-section {
+    text-align: center;
+
+    padding-top: 0;
+}
+
+#selectionMessage {
+    color: #a64d6f;
+
+    font-size: 13px;
+
+    line-height: 1.4;
+
+    margin-bottom: 14px;
+}
+
+.confirm-button {
+    background: #e94f83;
+
+    color: white;
+
+    padding: 13px 28px;
+
+    box-shadow:
+        0 8px 20px
+        rgba(233, 79, 131, 0.28);
+}
+
+.confirm-button:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 12px 25px
+        rgba(233, 79, 131, 0.35);
+}
+
+
+/* ========================================
+   FINAL CONFIRMATION PAGE
+======================================== */
+
+.confirmation-card {
+    width: min(470px, 100%);
+}
+
+.date-summary {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 8px;
+
+    margin: 20px auto;
+}
+
+.summary-item {
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    text-align: left;
+
+    padding: 11px 13px;
+
+    background: #fff5f8;
+
+    border:
+        1px solid
+        #f4d4df;
+
+    border-radius: 13px;
+}
+
+.summary-item > span {
+    font-size: 24px;
+}
+
+.summary-item div {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 2px;
+}
+
+.summary-item small {
+    color: #a87588;
+
+    font-size: 11px;
+}
+
+.summary-item strong {
+    color: #8f3157;
+
+    font-size: 14px;
+}
+
+.final-message {
+    color: #a64d6f;
+
+    font-size: 14px;
+
+    margin-top: 16px;
+}
+
+
+/* ========================================
+   ANIMATIONS
+======================================== */
+
+@keyframes heartbeat {
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.12);
+    }
+}
+
+@keyframes bigHeartbeat {
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    15% {
+        transform: scale(1.15);
+    }
+
+    30% {
+        transform: scale(1);
+    }
+
+    45% {
+        transform: scale(1.1);
+    }
+
+    60% {
+        transform: scale(1);
+    }
+}
+
+@keyframes floatHeart {
+    0% {
+        transform:
+            translateY(0)
+            rotate(0deg);
+
+        opacity: 0;
+    }
+
+    20% {
+        opacity: 0.45;
+    }
+
+    100% {
+        transform:
+            translateY(-110vh)
+            rotate(30deg);
+
+        opacity: 0;
+    }
+}
+
+@keyframes cardAppear {
+    from {
+        opacity: 0;
+
+        transform:
+            translateY(20px)
+            scale(0.97);
+    }
+
+    to {
+        opacity: 1;
+
+        transform:
+            translateY(0)
+            scale(1);
+    }
+}
+
+@keyframes textAppear {
+    from {
+        opacity: 0;
+
+        transform:
+            translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+
+        transform:
+            translateY(0);
+    }
+}
+
+
+/* ========================================
+   TABLET
+======================================== */
+
+@media (max-width: 700px) {
+
+    .date-container {
+        padding:
+            20px
+            12px
+            35px;
+    }
+
+    .date-card {
+        padding:
+            25px
+            20px;
+    }
+
+    .choice-grid {
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
+}
+
+
+/* ========================================
+   MOBILE
+======================================== */
+
+@media (max-width: 500px) {
+
+    .question-container {
+        padding: 12px;
+    }
+
+    .love-card {
+        padding:
+            28px
+            20px;
+
+        border-radius: 22px;
+    }
+
+    h1 {
+        font-size: 34px;
+    }
+
+    .emoji {
+        font-size: 45px;
+    }
+
+    .big-heart {
+        font-size: 65px;
+    }
+
+    .message {
+        font-size: 13px;
+        margin-bottom: 20px;
+    }
+
+    .buttons {
+        gap: 8px;
+    }
+
+    button {
+        padding:
+            11px
+            20px;
+    }
+
+
+    /* DATE */
+
+    .date-container {
+        padding:
+            12px
+            8px
+            30px;
+    }
+
+    .date-card {
+        padding:
+            22px
+            15px;
+
+        border-radius: 20px;
+    }
+
+    .date-header {
+        margin-bottom: 24px;
+    }
+
+    .date-emoji {
+        font-size: 42px;
+    }
+
+    .date-header h1 {
+        font-size: 32px;
+    }
+
+    .date-intro {
+        font-size: 13px;
+    }
+
+    .choice-section {
+        margin-bottom: 22px;
+    }
+
+    .choice-section h2 {
+        font-size: 17px;
+    }
+
+    .choice-grid {
+        grid-template-columns:
+            repeat(2, 1fr);
+
+        gap: 8px;
+    }
+
+    .choice-card {
+        min-height: 85px;
+    }
+
+    .choice-card span {
+        font-size: 24px;
+    }
+
+    .choice-card strong {
+        font-size: 12px;
+    }
+
+    .date-inputs {
+        grid-template-columns: 1fr;
+    }
+
+    .confirm-button {
+        width: 100%;
+    }
+}
+
+
+/* ========================================
+   VERY SMALL PHONES
+======================================== */
+
+@media (max-width: 350px) {
+
+    .love-card {
+        padding:
+            24px
+            16px;
+    }
+
+    h1 {
+        font-size: 30px;
+    }
+
+    .date-card {
+        padding:
+            18px
+            10px;
+    }
+
+    .choice-grid {
+        gap: 6px;
+    }
+
+    .choice-card {
+        min-height: 80px;
+    }
+
+    .choice-card span {
+        font-size: 22px;
+    }
+
+    .choice-card strong {
+        font-size: 11px;
+    }
+}
+
+/* ========================================
+   SAFE NO BUTTON
+======================================== */
+
+.question-page .buttons {
+    position: relative;
+    min-height: 70px;
+}
+
+.question-page .no-button {
+    position: relative;
+    z-index: 20;
+    transition:
+        left 0.15s ease,
+        top 0.15s ease,
+        transform 0.15s ease;
+}
+
+@media (max-width: 500px) {
+
+    .question-page .buttons {
+        min-height: 75px;
+    }
+
+}
