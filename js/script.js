@@ -1,9 +1,17 @@
 // ========================================
-// YES / NO PAGE
+// GIRLFRIEND SITE - MAIN JAVASCRIPT
 // ========================================
 
-const yesButton = document.getElementById("yesButton");
-const noButton = document.getElementById("noButton");
+
+// ========================================
+// PAGE ELEMENTS
+// ========================================
+
+const yesButton = document.querySelector(".yes-btn");
+const noButton = document.querySelector(".no-btn");
+
+const continueButton = document.querySelector(".continue-btn");
+const confirmButton = document.querySelector(".confirm-btn");
 
 
 // ========================================
@@ -18,262 +26,219 @@ if (yesButton) {
 
 
 // ========================================
-// UN-CATCHABLE NO BUTTON 😭
+// UN-CATCHABLE NO BUTTON
 // ========================================
 
 if (noButton) {
 
-    const buttonsArea = document.querySelector(".buttons");
-
-    let lastMove = 0;
-
-    function moveNoButton() {
-
-        if (!buttonsArea) return;
-
-        const now = Date.now();
-
-        if (now - lastMove < 180) return;
-
-        lastMove = now;
-
-        const area = buttonsArea.getBoundingClientRect();
+    const moveNoButton = () => {
 
         const buttonWidth = noButton.offsetWidth;
         const buttonHeight = noButton.offsetHeight;
 
-        const extraHorizontal = 140;
-        const extraVertical = 90;
+        const maxX = window.innerWidth - buttonWidth - 20;
+        const maxY = window.innerHeight - buttonHeight - 20;
 
-        let minX = area.left - extraHorizontal;
-        let maxX = area.right + extraHorizontal - buttonWidth;
-
-        let minY = area.top - extraVertical;
-        let maxY = area.bottom + extraVertical - buttonHeight;
-
-        const padding = 15;
-
-        minX = Math.max(padding, minX);
-
-        maxX = Math.min(
-            window.innerWidth - buttonWidth - padding,
-            maxX
+        const randomX = Math.max(
+            20,
+            Math.random() * maxX
         );
 
-        minY = Math.max(padding, minY);
-
-        maxY = Math.min(
-            window.innerHeight - buttonHeight - padding,
-            maxY
+        const randomY = Math.max(
+            20,
+            Math.random() * maxY
         );
-
-        const x =
-            minX +
-            Math.random() *
-            Math.max(1, maxX - minX);
-
-        const y =
-            minY +
-            Math.random() *
-            Math.max(1, maxY - minY);
 
         noButton.style.position = "fixed";
-        noButton.style.left = `${Math.round(x)}px`;
-        noButton.style.top = `${Math.round(y)}px`;
-        noButton.style.right = "auto";
-        noButton.style.bottom = "auto";
-        noButton.style.zIndex = "9999";
-    }
+        noButton.style.left = `${randomX}px`;
+        noButton.style.top = `${randomY}px`;
+    };
 
 
-    // PC mouse
-    document.addEventListener("mousemove", (event) => {
+    noButton.addEventListener("mouseenter", moveNoButton);
 
-        const rect = noButton.getBoundingClientRect();
-
-        const escapeDistance = 100;
-
-        const close =
-            event.clientX >= rect.left - escapeDistance &&
-            event.clientX <= rect.right + escapeDistance &&
-            event.clientY >= rect.top - escapeDistance &&
-            event.clientY <= rect.bottom + escapeDistance;
-
-        if (close) {
-            moveNoButton();
-        }
-
-    });
-
-
-    // Mouse enters button
-    noButton.addEventListener("mouseenter", () => {
-        moveNoButton();
-    });
-
-
-    // Mobile
-    noButton.addEventListener(
-        "touchstart",
-        (event) => {
-
-            event.preventDefault();
-
-            moveNoButton();
-
-        },
-        {
-            passive: false
-        }
-    );
-
-
-    // If somehow clicked
-    noButton.addEventListener("click", (event) => {
-
+    noButton.addEventListener("touchstart", (event) => {
         event.preventDefault();
-
         moveNoButton();
-
     });
 
+    noButton.addEventListener("click", (event) => {
+        event.preventDefault();
+        moveNoButton();
+    });
 }
 
 
 // ========================================
-// YES PAGE
+// CONTINUE TO DATE PAGE
 // ========================================
-
-const continueButton =
-    document.getElementById("continueButton");
 
 if (continueButton) {
-
     continueButton.addEventListener("click", () => {
-
         window.location.href = "date.html";
-
     });
-
 }
 
 
 // ========================================
-// DATE PLANNER
+// DATE PAGE
 // ========================================
 
-const choiceCards =
-    document.querySelectorAll(".choice-card");
+// Location selection
+const locationCards = document.querySelectorAll(
+    ".location-card, [data-location]"
+);
 
-const dateInput =
-    document.getElementById("date");
+locationCards.forEach((card) => {
 
-const timeInput =
-    document.getElementById("time");
+    card.addEventListener("click", () => {
 
-const confirmButton =
-    document.getElementById("confirmButton");
-
-const selectionMessage =
-    document.getElementById("selectionMessage");
-
-
-let selectedLocation = "";
-let selectedFood = "";
-
-
-// ========================================
-// CHOICE CARDS
-// ========================================
-
-if (choiceCards.length > 0) {
-
-    choiceCards.forEach((card) => {
-
-        card.addEventListener("click", () => {
-
-            const type =
-                card.dataset.type;
-
-            const value =
-                card.dataset.value;
-
-
-            document
-                .querySelectorAll(
-                    `.choice-card[data-type="${type}"]`
-                )
-                .forEach((item) => {
-
-                    item.classList.remove("selected");
-
-                });
-
-
-            card.classList.add("selected");
-
-
-            if (type === "location") {
-                selectedLocation = value;
-            }
-
-
-            if (type === "food") {
-                selectedFood = value;
-            }
-
-
-            updateSelectionMessage();
-
+        locationCards.forEach((item) => {
+            item.classList.remove("selected");
+            item.classList.remove("active");
         });
 
-    });
+        card.classList.add("selected");
+        card.classList.add("active");
 
+        const location =
+            card.dataset.location ||
+            card.textContent.trim();
+
+        localStorage.setItem("dateLocation", location);
+    });
+});
+
+
+// Food selection
+const foodCards = document.querySelectorAll(
+    ".food-card, [data-food]"
+);
+
+foodCards.forEach((card) => {
+
+    card.addEventListener("click", () => {
+
+        foodCards.forEach((item) => {
+            item.classList.remove("selected");
+            item.classList.remove("active");
+        });
+
+        card.classList.add("selected");
+        card.classList.add("active");
+
+        const food =
+            card.dataset.food ||
+            card.textContent.trim();
+
+        localStorage.setItem("dateFood", food);
+    });
+});
+
+
+// ========================================
+// DATE INPUT
+// ========================================
+
+const dateInput =
+    document.querySelector("#date") ||
+    document.querySelector('input[type="date"]');
+
+if (dateInput) {
+
+    dateInput.addEventListener("change", () => {
+
+        localStorage.setItem(
+            "dateDate",
+            dateInput.value
+        );
+
+    });
 }
 
 
 // ========================================
-// UPDATE DATE MESSAGE
+// TIME INPUT
 // ========================================
 
-function updateSelectionMessage() {
+const timeInput =
+    document.querySelector("#time") ||
+    document.querySelector('input[type="time"]') ||
+    document.querySelector("select.time-select");
 
-    if (!selectionMessage) return;
+if (timeInput) {
+
+    timeInput.addEventListener("change", () => {
+
+        localStorage.setItem(
+            "dateTime",
+            timeInput.value
+        );
+
+    });
+}
 
 
-    if (selectedLocation && selectedFood) {
+// ========================================
+// GET SELECTED DATE DETAILS
+// ========================================
 
-        selectionMessage.textContent =
-            `So we're thinking ${selectedLocation} with ${selectedFood}... ❤️`;
+function getDateDetails() {
 
-        return;
+    let location =
+        localStorage.getItem("dateLocation") || "";
 
-    }
+    let food =
+        localStorage.getItem("dateFood") || "";
 
+    let date =
+        localStorage.getItem("dateDate") || "";
+
+    let time =
+        localStorage.getItem("dateTime") || "";
+
+
+    // Try to get current values directly from the page
+    // in case localStorage hasn't been updated yet.
+
+    const selectedLocation = document.querySelector(
+        ".location-card.selected, .location-card.active, [data-location].selected, [data-location].active"
+    );
 
     if (selectedLocation) {
-
-        selectionMessage.textContent =
-            `${selectedLocation} sounds lovely! Now choose something to eat. ❤️`;
-
-        return;
-
+        location =
+            selectedLocation.dataset.location ||
+            selectedLocation.textContent.trim();
     }
 
+
+    const selectedFood = document.querySelector(
+        ".food-card.selected, .food-card.active, [data-food].selected, [data-food].active"
+    );
 
     if (selectedFood) {
-
-        selectionMessage.textContent =
-            `${selectedFood} sounds delicious! Now choose somewhere to go. ❤️`;
-
-        return;
-
+        food =
+            selectedFood.dataset.food ||
+            selectedFood.textContent.trim();
     }
 
 
-    selectionMessage.textContent =
-        "Choose your date details above ❤️";
+    if (dateInput && dateInput.value) {
+        date = dateInput.value;
+    }
 
+
+    if (timeInput && timeInput.value) {
+        time = timeInput.value;
+    }
+
+
+    return {
+        location,
+        food,
+        date,
+        time
+    };
 }
 
 
@@ -281,15 +246,10 @@ function updateSelectionMessage() {
 // SEND DATE NOTIFICATION
 // ========================================
 
-async function sendDateNotification(
-    location,
-    food,
-    date,
-    time
-) {
+async function sendDateNotification(dateDetails) {
 
     const response = await fetch(
-        "http://127.0.0.1:8100/notify",
+        "https://girlfriend-site.onrender.com/notify",
         {
             method: "POST",
 
@@ -298,30 +258,38 @@ async function sendDateNotification(
             },
 
             body: JSON.stringify({
-                location: location,
-                food: food,
-                date: date,
-                time: time
+                location: dateDetails.location,
+                food: dateDetails.food,
+                date: dateDetails.date,
+                time: dateDetails.time
             })
         }
     );
 
 
-    const result = await response.json();
-
-
     if (!response.ok) {
 
-        throw new Error(
-            result.detail ||
-            "The notification could not be sent."
-        );
+        let errorMessage =
+            "Something went wrong while sending the notification.";
 
+        try {
+
+            const errorData =
+                await response.json();
+
+            if (errorData.detail) {
+                errorMessage = errorData.detail;
+            }
+
+        } catch (error) {
+            // Ignore JSON parsing errors.
+        }
+
+        throw new Error(errorMessage);
     }
 
 
-    return result;
-
+    return await response.json();
 }
 
 
@@ -333,64 +301,48 @@ if (confirmButton) {
 
     confirmButton.addEventListener("click", async () => {
 
-        const date =
-            dateInput.value;
-
-        const time =
-            timeInput.value;
+        const dateDetails = getDateDetails();
 
 
-        // -------------------------------
-        // VALIDATION
-        // -------------------------------
+        // --------------------------------
+        // VALIDATE
+        // --------------------------------
 
-        if (!selectedLocation) {
+        if (!dateDetails.location) {
 
-            alert(
-                "You haven't chosen where we're going yet. 🥹❤️"
-            );
-
+            alert("Please choose a location ❤️");
             return;
 
         }
 
 
-        if (!selectedFood) {
+        if (!dateDetails.food) {
 
-            alert(
-                "You haven't chosen what we're eating yet. 🍕❤️"
-            );
-
+            alert("Please choose what you want to eat ❤️");
             return;
 
         }
 
 
-        if (!date) {
+        if (!dateDetails.date) {
 
-            alert(
-                "You haven't chosen a date yet. 📅❤️"
-            );
-
+            alert("Please choose a date ❤️");
             return;
 
         }
 
 
-        if (!time) {
+        if (!dateDetails.time) {
 
-            alert(
-                "You haven't chosen a time yet. ⏰❤️"
-            );
-
+            alert("Please choose a time ❤️");
             return;
 
         }
 
 
-        // -------------------------------
+        // --------------------------------
         // PREVENT DOUBLE CLICK
-        // -------------------------------
+        // --------------------------------
 
         confirmButton.disabled = true;
 
@@ -403,72 +355,64 @@ if (confirmButton) {
 
         try {
 
-            // ---------------------------
-            // SEND EMAIL NOTIFICATION
-            // ---------------------------
+            // ----------------------------
+            // SEND TO RENDER BACKEND
+            // ----------------------------
 
-            await sendDateNotification(
-                selectedLocation,
-                selectedFood,
-                date,
-                time
-            );
+            await sendDateNotification(dateDetails);
 
 
-            // ---------------------------
-            // SAVE DATE DETAILS
-            // ---------------------------
+            // ----------------------------
+            // SAVE DETAILS
+            // ----------------------------
 
             localStorage.setItem(
                 "dateLocation",
-                selectedLocation
+                dateDetails.location
             );
 
             localStorage.setItem(
                 "dateFood",
-                selectedFood
+                dateDetails.food
             );
 
             localStorage.setItem(
                 "dateDate",
-                date
+                dateDetails.date
             );
 
             localStorage.setItem(
                 "dateTime",
-                time
+                dateDetails.time
             );
 
 
-            // ---------------------------
-            // GO TO CONFIRMATION PAGE
-            // ---------------------------
+            // ----------------------------
+            // GO TO CONFIRMED PAGE
+            // ----------------------------
 
-            window.location.href =
-                "confirmed.html";
+            window.location.href = "confirmed.html";
 
-        }
-
-        catch (error) {
+        } catch (error) {
 
             console.error(
                 "Notification error:",
                 error
             );
 
-            alert(
-                "Something went wrong while sending the date notification. Please try again. ❤️"
-            );
 
             confirmButton.disabled = false;
 
             confirmButton.textContent =
                 originalText;
 
+
+            alert(
+                "I couldn't send the confirmation right now. Please try again ❤️"
+            );
         }
 
     });
-
 }
 
 
@@ -476,105 +420,114 @@ if (confirmButton) {
 // CONFIRMED PAGE
 // ========================================
 
-const finalLocation =
-    document.getElementById("finalLocation");
+const confirmedLocation =
+    document.querySelector("#confirmed-location");
 
-const finalFood =
-    document.getElementById("finalFood");
+const confirmedFood =
+    document.querySelector("#confirmed-food");
 
-const finalDate =
-    document.getElementById("finalDate");
+const confirmedDate =
+    document.querySelector("#confirmed-date");
 
-const finalTime =
-    document.getElementById("finalTime");
+const confirmedTime =
+    document.querySelector("#confirmed-time");
 
 
-if (finalLocation) {
+if (
+    confirmedLocation ||
+    confirmedFood ||
+    confirmedDate ||
+    confirmedTime
+) {
 
     const location =
-        localStorage.getItem("dateLocation");
+        localStorage.getItem("dateLocation") || "";
 
     const food =
-        localStorage.getItem("dateFood");
+        localStorage.getItem("dateFood") || "";
 
     const date =
-        localStorage.getItem("dateDate");
+        localStorage.getItem("dateDate") || "";
 
     const time =
-        localStorage.getItem("dateTime");
+        localStorage.getItem("dateTime") || "";
 
 
-    // Location
-
-    finalLocation.textContent =
-        location || "---";
-
-
-    // Food
-
-    finalFood.textContent =
-        food || "---";
-
-
-    // Date
-
-    if (date) {
-
-        const dateObject =
-            new Date(`${date}T00:00:00`);
-
-
-        finalDate.textContent =
-            dateObject.toLocaleDateString(
-                "en-US",
-                {
-                    weekday: "long",
-                    month: "long",
-                    day: "numeric",
-                    year: "numeric"
-                }
-            );
-
-    } else {
-
-        finalDate.textContent =
-            "---";
-
+    if (confirmedLocation) {
+        confirmedLocation.textContent =
+            location;
     }
 
 
-    // Time
-
-    if (time) {
-
-        const [hours, minutes] =
-            time.split(":");
-
-
-        const timeObject =
-            new Date();
-
-
-        timeObject.setHours(
-            hours,
-            minutes
-        );
-
-
-        finalTime.textContent =
-            timeObject.toLocaleTimeString(
-                "en-US",
-                {
-                    hour: "numeric",
-                    minute: "2-digit"
-                }
-            );
-
-    } else {
-
-        finalTime.textContent =
-            "---";
-
+    if (confirmedFood) {
+        confirmedFood.textContent =
+            food;
     }
 
+
+    if (confirmedDate) {
+
+        if (date) {
+
+            const formattedDate =
+                new Date(`${date}T00:00:00`)
+                    .toLocaleDateString(
+                        "en-US",
+                        {
+                            weekday: "long",
+                            year: "numeric",
+                            month: "long",
+                            day: "numeric"
+                        }
+                    );
+
+            confirmedDate.textContent =
+                formattedDate;
+
+        } else {
+
+            confirmedDate.textContent =
+                "Not selected";
+
+        }
+    }
+
+
+    if (confirmedTime) {
+
+        if (time) {
+
+            let formattedTime = time;
+
+            // Convert 24-hour time to 12-hour format
+            if (time.includes(":")) {
+
+                const [hours, minutes] =
+                    time.split(":");
+
+                const hourNumber =
+                    parseInt(hours, 10);
+
+                const suffix =
+                    hourNumber >= 12
+                        ? "PM"
+                        : "AM";
+
+                const displayHour =
+                    hourNumber % 12 || 12;
+
+                formattedTime =
+                    `${displayHour}:${minutes} ${suffix}`;
+            }
+
+            confirmedTime.textContent =
+                formattedTime;
+
+        } else {
+
+            confirmedTime.textContent =
+                "Not selected";
+
+        }
+    }
 }
